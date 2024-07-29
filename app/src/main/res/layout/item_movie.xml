@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/movie_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp">
+
+        <TextView
+            android:id="@+id/movieNm_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="영화이름:"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+            android:id="@+id/openDt_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="개봉일:"
+            android:layout_marginTop="9dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/movieNm_tv"/>
+
+        <TextView
+            android:id="@+id/salesAmt_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="매출액:"
+            android:layout_marginTop="9dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/openDt_tv"/>
+
+        <TextView
+            android:id="@+id/audiChange_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="전일대비:"
+            android:layout_marginTop="9dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/salesAmt_tv"/>
+
+        <TextView
+            android:id="@+id/salseAcc_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="누적 매출:"
+            android:layout_marginTop="9dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/audiChange_tv"/>
+
+        <TextView
+            android:id="@+id/audiAcc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="누적 관객수:"
+            android:layout_marginTop="9dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/salseAcc_tv"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
