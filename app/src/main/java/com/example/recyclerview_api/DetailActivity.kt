@@ -1,55 +1,48 @@
 package com.example.recyclerview_api
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import android.view.WindowInsetsAnimation
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.recyclerview_api.api.MovieDataResponse
 import com.example.recyclerview_api.api.MovieRetrofitItf
 import com.example.recyclerview_api.api.MovieRetrofitObj
-import com.example.recyclerview_api.databinding.ActivityMainBinding
-import com.example.recyclerview_api.databinding.ItemMovieBinding
+import com.example.recyclerview_api.databinding.ActivityDetailBinding
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.create
 
-class MainActivity : AppCompatActivity() {
+class DetailActivity: AppCompatActivity() {
 
-    lateinit var binding: ActivityMainBinding
-    private val adapter by lazy { MovieRVAdapter(dataList) }
-    private val dataList = mutableListOf<MovieDataResponse.BoxOfficeResult.DailyBoxOffice?>()
-    var inputData: String = ""
+    lateinit var binding: ActivityDetailBinding
+    private val detailList = mutableListOf<MovieDataResponse.BoxOfficeResult.DailyBoxOffice?>()
+    private val adapter by lazy { DetailRVAdapter(detailList)}
+    private var movieData: String? = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
+        binding = ActivityDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // Intent로부터 데이터 받기
+        val movieName = intent.getStringExtra("MOVIE_NAME")
+        movieData = intent.getStringExtra("MOVIE_DATE")
 
         // 어댑터 연결
         binding.movieRv.adapter = adapter
         binding.movieRv.layoutManager = LinearLayoutManager(this)
 
-        binding.searchBt.setOnClickListener {
-            movieRequest()
-        }
+        // 영화 정보 요청
+        movieRequest(movieName)
     }
 
-    fun movieRequest(){
+    fun movieRequest(movieName: String?){
 
         // 서비스 객체 생성
         val apiService = MovieRetrofitObj.getRetrofit().create(MovieRetrofitItf::class.java)
 
         // Call 객체 생성
-        inputData = binding.movieDateEt.text.trim().replace(Regex(" "),"")
+        val inputData = movieData?.trim()?.replace(Regex(" "),"") ?: ""
         val movieCall = apiService.getmovieinfo(
             "API_KEY",
             inputData,
@@ -58,23 +51,18 @@ class MainActivity : AppCompatActivity() {
             "K",
         )
 
-        if(!dataList.isEmpty()){
-            dataList.clear()
-        }
-        movieCall.enqueue(object: Callback<MovieDataResponse>{
+        movieCall.enqueue(object : Callback<MovieDataResponse> {
             override fun onResponse(call: Call<MovieDataResponse>, response: Response<MovieDataResponse>) {
                 Log.d("SUCCESS", response.toString())
                 val data = response.body()
                 val movieinfo = data?.boxOfficeResult?.dailyBoxOfficeList
 
-                if(!movieinfo.isNullOrEmpty()){
-                    movieinfo?.let {info ->
-                        info.forEach{
-                            dataList.add(it)
-                            Log.d("DATALIST/SUCCESS", dataList.toString())
-                        }
+                if (!movieinfo.isNullOrEmpty()) {
+                    val movie = movieinfo.find { it?.movieNm == movieName } // 응답 데이터클래스의 movieNm과 MainActivity에서 받은 movieName가 동일한지
+                    if (movie != null) {
+                        detailList.add(movie) // 데이터를 리스트에 추가
+                        adapter.notifyDataSetChanged() // 어댑터에게 데이터가 변경됨을 알림
                     }
-                    adapter.notifyDataSetChanged() // 어댑터에게 변경됨을 알려줌
                 }
             }
 
